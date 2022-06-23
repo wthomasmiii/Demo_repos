@@ -1,0 +1,44 @@
+{
+    "userId": "",
+    "images": [
+        {
+            "type": 0,
+            "linkToImage":"https://baas-software-public-site.s3.us-east-2.amazonaws.com/Trucking-Side.png"
+        },
+        {
+            "type": 1,
+            "linkToImage":"https://baas-software-public-site.s3.us-east-2.amazonaws.com/Trucking-Side.png"
+        },
+        {
+            "type": 2,
+            "linkToImage":"https://baas-software-public-site.s3.us-east-2.amazonaws.com/Trucking-Side.png"
+        },
+        {
+            "type": 3,
+            "linkToImage":"https://baas-software-public-site.s3.us-east-2.amazonaws.com/Trucking-Side.png"
+        },
+        {
+            "type": 4,
+            "linkToImage":"https://baas-software-public-site.s3.us-east-2.amazonaws.com/trucking-default-square.png"
+        },
+        {
+            "type": 5,
+            "linkToImage":"https://baas-software-public-site.s3.us-east-2.amazonaws.com/trucking-default-square.png"
+        }
+    ],
+    "truck1Object": {
+        "name": "Classic American Long-Nose", 
+        "type": 1,
+        "hexColor": "#fff"
+    },
+    "truck2Object": {
+        "name": "American Short-Nose",
+        "type": 2, 
+        "hexColor": "#fff"
+    },
+    "truck3Object": {
+        "name": "European Flat-Nose", 
+        "type": 3,
+        "hexColor": "#fff"
+    }
+}

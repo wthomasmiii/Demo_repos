@@ -1,0 +1,3840 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "Trucking Software Public API",
+		"description": "API for trucking software web application",
+		"version": "1.0.0"
+	},
+	"servers": [
+		{
+			"url": "http://localhost:3001/api/v1",
+			"description": "Development server"
+		}
+	],
+	"paths": {
+		"/auth/login": {
+			"post": {
+				"tags": ["auth"],
+				"description": "Login a user",
+				"summary": "Login an existing user",
+				"operationId": "login",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"description": "Email to attempt login with",
+										"type": "string"
+									},
+									"password": {
+										"description": "Password to attempt login with",
+										"type": "string"
+									}
+								},
+								"required": ["email", "password"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Login successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"accessToken": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Login unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/register": {
+			"post": {
+				"tags": ["auth"],
+				"description": "Register a new user",
+				"summary": "Registers a new user",
+				"operationId": "register",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"required": ["name", "email", "password"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Register successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"accessToken": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Register unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/me": {
+			"get": {
+				"description": "Load an authenticated user",
+				"tags": ["auth"],
+				"summary": "Load an authenticated user",
+				"operationId": "loadUser",
+				"responses": {
+					"200": {
+						"description": "Load user successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Load user unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/refreshToken": {
+			"get": {
+				"description": "Refresh expired access token",
+				"summary": "Refreshes an access token that is expired",
+				"operationId": "refreshToken",
+				"tags": ["auth"],
+				"responses": {
+					"200": {
+						"description": "Refresh token successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"accessToken": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Refresh token unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/updateDetails": {
+			"patch": {
+				"description": "Update user details for a single user",
+				"summary": "Update user details for a single user",
+				"tags": ["auth"],
+				"operationId": "updateUserDetails",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string"
+									},
+									"email": {
+										"type": "string"
+									},
+									"phone": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Update user details success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"updatedUser": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Update user details fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/authors": {
+			"get": {
+				"description": "Get a list of all authors",
+				"summary": "Get a list of all authors to be used as select options",
+				"operationId": "getAuthors",
+				"tags": ["articles"],
+				"responses": {
+					"200": {
+						"description": "Get authors success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"authors": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/User"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get authors unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/search": {
+			"get": {
+				"description": "Get list of articles that match the provided query",
+				"summary": "Get list of articles",
+				"operationId": "getArticlesByQuery",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The limit of documents to return. Defaults to 10."
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The page of documents to return, will determine the amount of documents to skip when querying. Defaults to 1."
+					},
+					{
+						"in": "query",
+						"name": "tags",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"required": false,
+						"description": "Array of tags to execute a search for"
+					},
+					{
+						"in": "query",
+						"name": "authorId",
+						"schema": {
+							"type": "string"
+						},
+						"required": false,
+						"description": "Id of the author to execute a search for"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Query articles successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"articles": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Article"
+											}
+										},
+										"totalDocuments": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Query articles unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/{slug}": {
+			"get": {
+				"description": "Get a single article identified by slug",
+				"summary": "Get a single article",
+				"operationId": "getArticleBySlug",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "slug",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Slug for the article that is to be searched for"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get Article by slug successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"article": {
+											"$ref": "#/components/schemas/Article"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get Article by slug unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/{articleSlug}/comments": {
+			"get": {
+				"description": "Get commendts for a specific article identified by a slug",
+				"summary": "Get comments for a specific article",
+				"operationId": "getCommentsByArticle",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "articleSlug",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Slug for the article that you want to find comments for"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get Article comments successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"comments": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/ArticleComment"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get Article comments unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles": {
+			"post": {
+				"description": "Create a new article",
+				"summary": "Create a new article",
+				"operationId": "createArticle",
+				"tags": ["articles"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ArticleBody"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Create article successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"article": {
+											"$ref": "#/components/schemas/Article"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Create article unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/{articleId}": {
+			"delete": {
+				"description": "Delete a single article by id",
+				"summary": "Delete a single article",
+				"operationId": "deleteOneArticle",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "articleId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id of the article to delete"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Delete one article successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"message": {
+											"type": "string",
+											"example": "Successfully deleted article"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Delete one article unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"description": "Update a single article by id",
+				"summary": "Update a single article",
+				"operationId": "updateArticle",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "articleId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id of the article to update"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ArticleBody"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Update article successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"updatedArticle": {
+											"$ref": "#/components/schemas/Article"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Update article unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/{articleId}/comment": {
+			"post": {
+				"description": "Create a new comment on a specific article",
+				"summary": "Create a new comment on a specific article",
+				"operationId": "createArticleComment",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "articleId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id of the article to create a new comment for"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"text": {
+										"type": "string"
+									}
+								},
+								"required": ["text"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Create article comment successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"comment": {
+											"$ref": "#/components/schemas/ArticleComment"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						},
+						"description": "Create article comment unsuccessful response"
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/multiple": {
+			"delete": {
+				"description": "Delete multiple articles by id",
+				"summary": "Delete multiple articles",
+				"operationId": "deleteMultipleArticles",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "articleId",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"required": true,
+						"description": "Id(s) of article(s) to delete"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Delete multiple articles successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"message": {
+											"type": "string",
+											"example": "Successfully deleted articles"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Delete multiple articles unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"oneOf": [
+										{
+											"$ref": "#/components/schemas/ErrorResponse"
+										},
+										{
+											"$ref": "#/components/schemas/DeleteMultipleErrorResponse"
+										}
+									]
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/articles/toggleEditing/{articleId}": {
+			"patch": {
+				"description": "Toggle editing on a specific article",
+				"summary": "Toggle editing on a specific article",
+				"operationId": "toggleEditingLocked",
+				"tags": ["articles"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "articleId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id of the article to update"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Toggle editing successful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"article": {
+											"$ref": "#/components/schemas/Article"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Toggle editing unsuccessful response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories": {
+			"get": {
+				"description": "Get a paginated list of categories",
+				"summary": "Get a paginated list of categories",
+				"operationId": "getAllCategories",
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "Number of documents to return. Defaults to 10."
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "Page number used for determining number of documents to skip. Defaults to 1."
+					}
+				],
+				"tags": ["categories"],
+				"responses": {
+					"200": {
+						"description": "Get paginated categories success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"categories": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Category"
+											}
+										},
+										"totalDocuments": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get paginated categories fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"post": {
+				"description": "Create a new category",
+				"summary": "Create a new category",
+				"operationId": "createCategory",
+				"tags": ["categories"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CategoryBody"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Create category success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"category": {
+											"$ref": "#/components/schemas/Category"
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories/options": {
+			"get": {
+				"description": "Get a list of all categories",
+				"summary": "Get a list of all categories",
+				"operationId": "getCategoryOptions",
+				"tags": ["categories"],
+				"responses": {
+					"200": {
+						"description": "Get all categories success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "string",
+											"example": "true"
+										},
+										"categories": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Category"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get all categories fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories/search": {
+			"get": {
+				"description": "Get a list of articles that belong to 1 or more categories",
+				"summary": "Get a list of articles by categories",
+				"operationId": "getArticlesByCategoryQuery",
+				"tags": ["categories"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"required": true,
+						"description": "One or more category ids to search by"
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The limit of documents to return. Defaults to 10."
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The page of documents to return, will determine the amount of documents to skip when querying. Defaults to 1."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Query articles by category success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": "true"
+										},
+										"articles": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Article"
+											}
+										},
+										"totalDocuments": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Query articles by category fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories/{categoryId}": {
+			"parameters": [
+				{
+					"in": "path",
+					"name": "categoryId",
+					"schema": {
+						"type": "string"
+					},
+					"required": true,
+					"description": "Id of a specific category"
+				}
+			],
+			"get": {
+				"description": "Get a single category by id",
+				"summary": "Get a single category by id",
+				"operationId": "getCategoryById",
+				"tags": ["categories"],
+				"responses": {
+					"200": {
+						"description": "Get category by id success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"category": {
+											"$ref": "#/components/schemas/Category"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get category by id fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Delete a single category by id",
+				"summary": "Delete a single category by id",
+				"operationId": "deleteOneCategory",
+				"tags": ["categories"],
+				"responses": {
+					"200": {
+						"description": "Delete category by id success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Successfully deleted category"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Delete category by id fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"description": "Update a single category by id",
+				"summary": "Update a single category by id",
+				"operationId": "updateCategory",
+				"tags": ["categories"],
+				"responses": {
+					"200": {
+						"description": "Update category by id success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"updatedCategory": {
+											"$ref": "#/components/schemas/Category"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Update category by id fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/categories/multiple": {
+			"delete": {
+				"description": "Delete multiple categories by id",
+				"summary": "Delete multiple categories by id",
+				"operationId": "deleteMultipleCategories",
+				"tags": ["categories"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoryId",
+						"schema": {
+							"type": "array",
+							"items": {
+								"type": "string"
+							}
+						},
+						"required": true,
+						"description": "One or more ids of categories to be deleted"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Delete multiple categories success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Successfully deleted categories"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Delete multiple categories fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeleteMultipleErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/articleViews": {
+			"post": {
+				"description": "Log the view of an article",
+				"summary": "Log the view of an article",
+				"operationId": "createArticleView",
+				"tags": ["metrics"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"articleId": {
+										"type": "string"
+									}
+								},
+								"required": ["articleId"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Create article view success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"articleView": {
+											"$ref": "#/components/schemas/ArticleView"
+										}
+									}
+								}
+							}
+						}
+					},
+					"204": {
+						"description": "User recently viewed article response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": false
+										},
+										"message": {
+											"type": "string",
+											"example": "User viewed this article less than 24 hours ago so this view is not being recorded"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Create article view fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/articleViews/customRange": {
+			"get": {
+				"description": "Gets top 3 most viewed articles within a custom date range",
+				"summary": "Get top 3 most viewed articles within a custom range",
+				"operationId": "getArticleViewsByCustomRange",
+				"tags": ["metrics"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "startDate",
+						"schema": {
+							"type": "string",
+							"example": "yyyy-mm-dd"
+						},
+						"required": true,
+						"description": "Date at which the query begins"
+					},
+					{
+						"in": "query",
+						"name": "endDate",
+						"schema": {
+							"type": "string",
+							"example": "yyyy-mm-dd"
+						},
+						"required": true,
+						"description": "Date at which the query ends"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get article views by custom range success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "true",
+											"example": true
+										},
+										"articles": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/ArticleViewResponseData"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/articlesViews/lastDay": {
+			"get": {
+				"description": "Get top 3 most viewed articles for the last day",
+				"summary": "Get top 3 most viewed articles for the last day",
+				"operationId": "getArticleViewsByLastDay",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get article views by last day success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"articles": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/ArticleViewResponseData"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get article views by last day fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/articleViews/lastMonth": {
+			"get": {
+				"description": "Get top 3 most viewed articles for the last month",
+				"summary": "Get top 3 most viewed articles for the last month",
+				"operationId": "getArticleViewsByLastMonth",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get article views by last month success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"articles": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/ArticleViewResponseData"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get article views by last month fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/articlesViews/lastWeek": {
+			"get": {
+				"description": "Get top 3 most viewed articles for the last week",
+				"summary": "Get top 3 most viewed articles for the last week",
+				"operationId": "getArticleViewsByLastWeek",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get article views by last week success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"articles": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/ArticleViewResponseData"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get article views by last week fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/comments/customRange": {
+			"get": {
+				"description": "Get count of comments for a custom date range",
+				"summary": "Get count of comments for a custom date range",
+				"operationId": "getCommentCountByCustomRange",
+				"tags": ["metrics"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "startDate",
+						"schema": {
+							"type": "string",
+							"example": "yyyy-mm-dd"
+						},
+						"required": true,
+						"description": "Starting date of query"
+					},
+					{
+						"in": "query",
+						"name": "endDate",
+						"schema": {
+							"type": "string",
+							"example": "yyyy-mm-dd"
+						},
+						"required": "true",
+						"description": "Ending date of query"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get comment count by custom range success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"count": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get comment count by custom range fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/comments/lastDay": {
+			"get": {
+				"description": "Get count of comments for the last day",
+				"summary": "Get count of comments for the last day",
+				"operationId": "getCommentCountByLastDay",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get comment count by last day success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"count": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get comment count by last day fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/comments/lastMonth": {
+			"get": {
+				"description": "Get count of comments for the last month",
+				"summary": "Get count of comments for the last month",
+				"operationId": "getCommentCountByLastMonth",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get comment count by last month success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"count": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get comment count by last month fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/comments/lastWeek": {
+			"get": {
+				"description": "Get count of comments for the last week",
+				"summary": "Get count of comments for the last week",
+				"operationId": "getCommentCountByLastWeek",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get comment count by last week success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"count": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get comment count by last week fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/interactions/{userId}": {
+			"get": {
+				"description": "Get interaction statistics for a specific user",
+				"summary": "Get interaction statistics for a specific user",
+				"operationId": "getUserInteractionStatistics",
+				"tags": ["metrics"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"schema": {
+							"type": "string"
+						},
+						"required": "true",
+						"description": "Id for the user to get stats for"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get user statistics success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserStatisticsResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get user statistics fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/interactions/me": {
+			"get": {
+				"description": "Get interaction statistics for a logged in user",
+				"summary": "Get interaction statistics for a logged in user",
+				"operationId": "getMyInteractionStatistics",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get interaction statistics success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MyStatisticsResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get interaction statistics fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/tickets/customRange": {
+			"get": {
+				"description": "Get count of active tickets created within custom range",
+				"summary": "Get count of active tickets created within custom range",
+				"operationId": "getTicketCountByCustomRange",
+				"tags": ["metrics"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "startDate",
+						"schema": {
+							"type": "string",
+							"example": "yyyy-mm-dd"
+						},
+						"required": true,
+						"description": "Start date of the query"
+					},
+					{
+						"in": "query",
+						"name": "endDate",
+						"schema": {
+							"type": "string",
+							"example": "yyyy-mm-dd"
+						},
+						"required": true,
+						"description": "End date of the query"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get ticket count by custom range success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"tickets": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get ticket count by custom range fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/tickets/lastDay": {
+			"get": {
+				"description": "Get count of active tickets created within last day",
+				"summary": "Get count of active tickets created within last day",
+				"operationId": "getTicketCountByLastDay",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get tickets count by last day success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"tickets": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get tickets count by last day fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/tickets/lastMonth": {
+			"get": {
+				"description": "Get count of active tickets created within last month",
+				"summary": "Get count of active tickets created within last month",
+				"operationId": "getTicketCountByLastMonth",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get tickets count by last month success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"tickets": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get tickets count by last month fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/metrics/tickets/lastWeek": {
+			"get": {
+				"description": "Get count of active tickets created within last week",
+				"summary": "Get count of active tickets created within last week",
+				"operationId": "getTicketCountByLastWeek",
+				"tags": ["metrics"],
+				"responses": {
+					"200": {
+						"description": "Get ticket count by last week success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"tickets": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get ticket count by last week fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/payments/sales": {
+			"get": {
+				"description": "Get sales graph data for past 5 minutes",
+				"summary": "Get sales graph data for past 5 minutes",
+				"operationId": "getSales",
+				"tags": ["payments"],
+				"responses": {
+					"200": {
+						"description": "Get sales graph data success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"label": {
+											"type": "string"
+										},
+										"data": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get sales graph data fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/payments/create-checkout-session": {
+			"post": {
+				"description": "Create a stripe checkout session",
+				"summary": "Create a stripe checkout session",
+				"operationId": "createCheckoutSession",
+				"tags": ["payments"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"successUrl": {
+										"type": "string",
+										"example": "/receipt"
+									},
+									"cancelUrl": {
+										"type": "string",
+										"example": "/home"
+									}
+								},
+								"required": ["successUrl", "cancelUrl"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Create checkout session success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"id": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Create checkout session fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/incomplete": {
+			"get": {
+				"description": "Get paginated list of incomplete tickets",
+				"summary": "Get paginated list of incompleted tickets",
+				"operationId": "getIncompleteTickets",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The limit of documents to return. Defaults to 10."
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The page of documents to return, will determine the amount of documents to skip when querying. Defaults to 1."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get incomplete tickets success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TicketPaginatedResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get incomplete tickets fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/completed": {
+			"get": {
+				"description": "Get paginated list of completed tickets",
+				"summary": "Get paginated list of completed tickets",
+				"operationId": "getCompletedTickets",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The limit of documents to return. Defaults to 10."
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The page of documents to return, will determine the amount of documents to skip when querying. Defaults to 1."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get completed tickets success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TicketPaginatedResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get completed tickets fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/unassigned": {
+			"get": {
+				"description": "Get a paginated list of unassigned tickets",
+				"summary": "Get a paginated list of unassigned tickets",
+				"operationId": "getUnassignedTickets",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The limit of documents to return. Defaults to 10."
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"schema": {
+							"type": "integer"
+						},
+						"required": false,
+						"description": "The page of documents to return, will determine the amount of documents to skip when querying. Defaults to 1."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get unassigned tickets success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TicketPaginatedResponse"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get unassigned tickets fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/mine": {
+			"get": {
+				"description": "Get a list of tickets belonging to a logged in user",
+				"summary": "Get a list of tickets belonging to a logged in user",
+				"operationId": "getTicketsByUser",
+				"tags": ["tickets"],
+				"responses": {
+					"200": {
+						"description": "Get my tickets success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"tickets": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Ticket"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get my tickets fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/{ticketId}": {
+			"parameters": [
+				{
+					"in": "path",
+					"name": "ticketId",
+					"schema": {
+						"type": "string"
+					},
+					"required": true,
+					"description": "Id of a specific Ticket document"
+				}
+			],
+			"get": {
+				"description": "Get a ticket by id",
+				"summary": "Get a ticket by id",
+				"operationId": "getTicketById",
+				"tags": ["tickets"],
+				"responses": {
+					"200": {
+						"description": "Get ticket by id success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"ticket": {
+											"$ref": "#/components/schemas/Ticket"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get ticket by id fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Ticket"
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"description": "Delete a single ticket by id",
+				"summary": "Delete a single ticket by id",
+				"operationId": "deleteOneTicket",
+				"tags": ["tickets"],
+				"responses": {
+					"200": {
+						"description": "Delete ticket success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"messsage": {
+											"type": "string",
+											"example": "Successfully deleted ticket"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Delete ticket fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/byUser/{email}": {
+			"get": {
+				"description": "Get all tickets created by a specific email",
+				"summary": "Get all tickets created by a specific email",
+				"operationId": "getTicketsByCreator",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "email",
+						"schema": {
+							"type": "string",
+							"example": "test@email.com"
+						},
+						"required": true,
+						"description": "Email for the creator of tickets to search for"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get tickets by creator success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"tickets": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Ticket"
+											}
+										},
+										"totalDocuments": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get tickets by creator fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/byAssignee/{adminEmail}": {
+			"get": {
+				"description": "Get all tickets assigned to a specific email",
+				"summary": "Get all tickets assigned to a specific email",
+				"operationId": "getTicketsByAssignee",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "adminEmail",
+						"schema": {
+							"type": "string",
+							"example": "morgan@email.com"
+						},
+						"required": true,
+						"description": "Email for the assignee of tickets to search for"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get tickets by assignee success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"tickets": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/Ticket"
+											}
+										},
+										"totalDocuments": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get tickets by assignee fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/{ticketId}/comments": {
+			"get": {
+				"description": "Get comments for a specific ticket",
+				"summary": "Get comments for a specific ticket",
+				"operationId": "getCommentsByTicket",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "ticketId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id of a specific ticket"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get comments by ticket success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"comments": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/TicketComment"
+											}
+										},
+										"totalComments": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get comments by ticket fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets": {
+			"post": {
+				"description": "Create a new ticket",
+				"summary": "Create a new ticket",
+				"operationId": "createTicket",
+				"tags": ["tickets"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TicketBody"
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Create ticket success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"ticket": {
+											"$ref": "#/components/schemas/Ticket"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Create ticket fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/{ticketId}/message": {
+			"post": {
+				"description": "Create a new ticket message",
+				"summary": "Create a new ticket message",
+				"operationId": "createTicketMessage",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "ticketId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id of a specific Ticket"
+					}
+				],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"text": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Create ticket comment success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"comment": {
+											"$ref": "#/components/schemas/TicketComment"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Create ticket comment fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/assignUser": {
+			"patch": {
+				"description": "Assign a ticket to an admin",
+				"summary": "Assign a ticket to an admin",
+				"operationId": "assignTicketToAdmin",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "ticketId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id of a specific Ticket"
+					},
+					{
+						"in": "query",
+						"name": "adminEmail",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Email of a specific admin"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Assign ticket success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"updatedTicket": {
+											"$ref": "#/components/schemas/Ticket"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Assign ticket fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/updateStatus/{ticketId}": {
+			"patch": {
+				"description": "Update status of a single ticket",
+				"summary": "Update status of a single ticket",
+				"operationId": "updateTicketStatus",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "ticketId",
+						"schema": {
+							"type": "string"
+						},
+						"required": true,
+						"description": "Id for a specific ticket"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Update ticket status success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"updatedTicket": {
+											"$ref": "#/components/schemas/Ticket"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Update ticket status fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/tickets/multiple": {
+			"delete": {
+				"description": "Delete multiple tickets",
+				"summary": "Delete multiple tickets",
+				"operationId": "deleteMultipleTickets",
+				"tags": ["tickets"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "ticketId",
+						"schema": {
+							"type": "array",
+							"items": "string'"
+						},
+						"required": true,
+						"description": "One or more ids of specific tickets"
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Delete multiple tickets success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"message": {
+											"type": "string",
+											"example": "Successfully deleted tickets"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Delete multiple tickets fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DeleteMultipleErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users": {
+			"get": {
+				"description": "Get all users",
+				"summary": "Get all users",
+				"operationId": "getAllUsers",
+				"tags": ["users"],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "limit",
+						"schema": {
+							"type": "integer",
+							"example": 10
+						},
+						"required": false,
+						"description": "The limit of documents to return. Defaults to 10."
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"schema": {
+							"type": "integer",
+							"example": 1
+						},
+						"required": false,
+						"description": "The page of documents to return, will determine the amount of documents to skip when querying. Defaults to 1."
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Get all users success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"users": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/User"
+											}
+										},
+										"totalUsers": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get all users fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/{userId}": {
+			"parameters": [
+				{
+					"in": "path",
+					"name": "userId",
+					"schema": {
+						"type": "string"
+					},
+					"required": true,
+					"description": "Id of a specific user"
+				}
+			],
+			"get": {
+				"description": "Get a single user by id",
+				"summary": "Get a single user by id",
+				"operationId": "getUserById",
+				"tags": ["users"],
+				"responses": {
+					"200": {
+						"description": "Get user by id success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"user": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get user by id fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			},
+			"patch": {
+				"description": "Update a single user by id",
+				"summary": "Update a single user by id",
+				"operationId": "updateUser",
+				"tags": ["users"],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"example": "updated name"
+									},
+									"email": {
+										"type": "string",
+										"example": "updated@email.com"
+									},
+									"phone": {
+										"type": "string",
+										"example": "847-038-3429"
+									}
+								},
+								"required": ["name", "email", "phone"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Update user success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"updatedUser": {
+											"$ref": "#/components/schemas/User"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Update user fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/users/admin": {
+			"get": {
+				"description": "Get all admin users",
+				"summary": "Get all admin users",
+				"operationId": "getAllAdmin",
+				"tags": ["users"],
+				"responses": {
+					"200": {
+						"description": "Get all admin success",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"success": {
+											"type": "boolean",
+											"example": true
+										},
+										"users": {
+											"type": "array",
+											"items": {
+												"$ref": "#/components/schemas/User"
+											}
+										},
+										"totalUsers": {
+											"type": "integer"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Get all admin fail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Unauthorized error response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ErrorResponse"
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		},
+		"schemas": {
+			"Article": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"author": {
+						"$ref": "#/components/schemas/User"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"title": {
+						"type": "string"
+					},
+					"htmlBody": {
+						"type": "string"
+					},
+					"textBody": {
+						"type": "string"
+					},
+					"tags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"comments": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/ArticleComment"
+						}
+					},
+					"isFree": {
+						"type": "boolean"
+					},
+					"editingLocked": {
+						"type": "boolean"
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				}
+			},
+			"ArticleBody": {
+				"type": "object",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"htmlBody": {
+						"type": "string"
+					},
+					"textBody": {
+						"type": "string"
+					},
+					"tags": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"category": {
+						"type": "string"
+					},
+					"isFree": {
+						"type": "boolean"
+					}
+				},
+				"required": ["title", "htmlBody", "textBody", "category", "isFree"]
+			},
+			"ArticleComment": {
+				"type": "object",
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"relatedArticle": {
+						"$ref": "#/components/schemas/Article"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				}
+			},
+			"ArticleView": {
+				"type": "object",
+				"properties": {
+					"article": {
+						"$ref": "#/components/schemas/Article"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"timestamp": {
+						"type": "string"
+					}
+				}
+			},
+			"ArticleViewResponseData": {
+				"type": "object",
+				"properties": {
+					"views": {
+						"type": "integer"
+					},
+					"article": {
+						"$ref": "#/components/schemas/Article"
+					}
+				}
+			},
+			"Category": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				}
+			},
+			"CategoryBody": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					}
+				},
+				"required": ["name", "description"]
+			},
+			"DeleteMultipleErrorResponse": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": "false"
+					},
+					"message": {
+						"type": "string",
+						"example": "One or more artcles was not found"
+					},
+					"incomplete": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"ErrorResponse": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": "false"
+					},
+					"error": {
+						"type": "string"
+					}
+				}
+			},
+			"MyStatisticsResponse": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"totalTraffic": {
+						"type": "integer"
+					},
+					"totalInteractions": {
+						"type": "integer"
+					},
+					"numberOfArticles": {
+						"type": "integer"
+					},
+					"numberOfComments": {
+						"type": "integer"
+					}
+				}
+			},
+			"Ticket": {
+				"type": "object",
+				"properties": {
+					"ticketNumber": {
+						"type": "integer"
+					},
+					"message": {
+						"type": "string"
+					},
+					"status": {
+						"type": "integer"
+					},
+					"category": {
+						"type": "string"
+					},
+					"createdBy": {
+						"type": "string"
+					},
+					"assignedTo": {
+						"$ref": "#/components/schemas/User"
+					},
+					"comments": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/TicketComment"
+						}
+					},
+					"createdAt": {
+						"type": "string"
+					},
+					"updatedAt": {
+						"type": "string"
+					}
+				}
+			},
+			"TicketBody": {
+				"type": "object",
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					}
+				},
+				"required": ["message", "email", "category"]
+			},
+			"TicketComment": {
+				"type": "object",
+				"properties": {
+					"text": {
+						"type": "string"
+					},
+					"relatedTicket": {
+						"$ref": "#/components/schemas/Ticket"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				}
+			},
+			"TicketPaginatedResponse": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"tickets": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/Ticket"
+						}
+					},
+					"totalDocuments": {
+						"type": "integer"
+					}
+				}
+			},
+			"User": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"role": {
+						"type": "integer"
+					},
+					"phone": {
+						"type": "string"
+					},
+					"profileImage": {
+						"type": "string"
+					},
+					"hasPaid": {
+						"type": "boolean"
+					},
+					"createdAt": {
+						"type": "string"
+					}
+				}
+			},
+			"UserStatisticsResponse": {
+				"type": "object",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"example": true
+					},
+					"mostViewedArticles": {
+						"$ref": "#/components/schemas/ArticleViewResponseData"
+					},
+					"totalInteractions": {
+						"type": "integer"
+					},
+					"numberOfComments": {
+						"type": "integer"
+					},
+					"ticketsCompleted": {
+						"type": "integer"
+					},
+					"ticketsAssigned": {
+						"type": "integer"
+					},
+					"numberOfArticles": {
+						"type": "integer"
+					},
+					"totalTraffic": {
+						"type": "integer"
+					}
+				},
+				"required": ["success", "totalInteractions", "numberOfComments"]
+			}
+		}
+	},
+	"security": [
+		{
+			"bearerAuth": []
+		}
+	]
+}

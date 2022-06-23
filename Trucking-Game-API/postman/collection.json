@@ -1,0 +1,4228 @@
+{
+	"info": {
+		"_postman_id": "0263fd7e-7319-4f46-9e0f-5f2d2bace9c9",
+		"name": "TruckingSoftwarePublicApi",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /users",
+			"item": [
+				{
+					"name": "/users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains users array', function(){",
+									"    const { users } = pm.response.json();",
+									"",
+									"    pm.expect(users).to.not.be.null;",
+									"",
+									"    pm.environment.set('adminId', users[0].id);",
+									"    pm.environment.set('regId', users[1].id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST /categories",
+			"item": [
+				{
+					"name": "/categories - Fail (no description)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status when no description is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"    ",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test Category\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories - Fail (no name)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status when no category is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"This is a test category\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories - Success 1",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let categoryName = `Test Category ${Date.now()}`;",
+									"pm.environment.set('createCategoryName', categoryName);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid category is provided', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Returns category in the response body', function(){",
+									"    const { category } = pm.response.json();",
+									"    pm.expect(category).to.be.not.null;",
+									"    pm.environment.set('categoryName', category.name);",
+									"    pm.environment.set('categoryId', category.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{createCategoryName}}\",\n    \"description\": \"This category is a test\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Creates a new category"
+					},
+					"response": []
+				},
+				{
+					"name": "/categories - Success 2",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let categoryName = `Test Category ${Date.now()}`;",
+									"pm.environment.set('createCategoryName', categoryName);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid category is provided', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Returns category in the response body', function(){",
+									"    const { category } = pm.response.json();",
+									"    pm.expect(category).to.be.not.null;",
+									"    pm.environment.set('categoryId2', category.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{createCategoryName}}\",\n    \"description\": \"This category is a test\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Creates a new category"
+					},
+					"response": []
+				},
+				{
+					"name": "/categories - Success 3",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let categoryName = `Test Category ${Date.now()}`;",
+									"pm.environment.set('createCategoryName', categoryName);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid category is provided', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Returns category in the response body', function(){",
+									"    const { category } = pm.response.json();",
+									"    pm.expect(category).to.be.not.null;",
+									"    pm.environment.set('categoryId3', category.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{createCategoryName}}\",\n    \"description\": \"This category is a test\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories"
+							]
+						},
+						"description": "Creates a new category"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST /articles",
+			"item": [
+				{
+					"name": "/articles - Fail (no title)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no title is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes\",\n    \"tags\": [\"general\", \"testing\", \"misc\"],\n    \"category\": \"6064b91cb95ba93f6897113b\",\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles - Fail (no htmlBody)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no htmlBody is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This is another Test Article\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes\",\n    \"tags\": [\"general\", \"testing\", \"misc\"],\n    \"category\": \"6064b91cb95ba93f6897113b\",\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles - Fail (no textBody)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no textBody is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This is another Test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes</p>\",\n    \"tags\": [\"general\", \"testing\", \"misc\"],\n    \"category\": \"6064b91cb95ba93f6897113b\",\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles - Fail (no category)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no category is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This is another Test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes\",\n    \"tags\": [\"general\", \"testing\", \"misc\"],\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles - Fail (no isFree)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no isFree is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This is another Test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes\",\n    \"tags\": [\"general\", \"testing\", \"misc\"],\n    \"category\": \"6064b91cb95ba93f6897113b\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles - Success 1 (no tags)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when tags is not provided', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Article is returned in response body', function(){",
+									"    const { article } = pm.response.json();",
+									"",
+									"    pm.expect(article).to.not.be.null;",
+									"",
+									"    pm.environment.set('articleId1', article.id);",
+									"    pm.environment.set('articleSlug1', article.slug);",
+									"    pm.environment.set('validAuthorId', article.authorId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"How to create a test article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes\",\n    \"category\": \"{{categoryId}}\",\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						},
+						"description": "Creates a new article"
+					},
+					"response": []
+				},
+				{
+					"name": "/articles - Success 2 (with tags)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid article is provided', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Article is returned in response body', function(){",
+									"    const { article } = pm.response.json();",
+									"",
+									"    pm.expect(article).to.not.be.null;",
+									"",
+									"    pm.environment.set('articleId2', article.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"How to create a test article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes\",\n    \"category\": \"{{categoryId}}\",\n    \"tags\": [\"misc\", \"testing\"],\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles - Success 3 (with tags)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid article is provided', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Article is returned in response body', function(){",
+									"    const { article } = pm.response.json();",
+									"",
+									"    pm.expect(article).to.not.be.null;",
+									"",
+									"    pm.environment.set('articleId3', article.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"How to create a test article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes\",\n    \"category\": \"{{categoryId}}\",\n    \"tags\": [\"misc\", \"testing\"],\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST /articles/:articleId/comment",
+			"item": [
+				{
+					"name": "/articles/:articleId/comment - Fail (no text)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no text is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId1}}/comment",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId1}}",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:articleId/comment - Fail (invalid articleId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when an invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"This is a test comment for an article\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{randomId}}/comment",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{randomId}}",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:articleId/comment - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid request is made', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response body should contain article comment object', function(){",
+									"    const { comment } = pm.response.json();",
+									"",
+									"    pm.expect(comment).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"This is a test comment for an article\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId1}}/comment",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId1}}",
+								"comment"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST /tickets",
+			"item": [
+				{
+					"name": "/tickets - Fail (no question)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no question is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"xyz@email.com\",\n    \"priority\": \"UI\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets - Fail (no email)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no question is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"This is a test ticket\",\n    \"priority\": \"UI\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets - Fail (no priority)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no question is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"This is a test ticket\",\n    \"email\": \"xyz@email.com\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets - Success 1",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid ticket details are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains ticket item', function(){",
+									"    const { ticket } = pm.response.json();",
+									"",
+									"    pm.expect(ticket).to.not.be.null;",
+									"",
+									"    pm.environment.set('ticketId1', ticket.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"This ticket is a test\",\n    \"email\": \"{{createdByEmail}}\",\n    \"priority\": \"UI\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets - Success 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid ticket details are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains ticket item', function(){",
+									"    const { ticket } = pm.response.json();",
+									"",
+									"    pm.expect(ticket).to.not.be.null;",
+									"",
+									"    pm.environment.set('ticketId2', ticket.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"This is another test ticket\",\n    \"email\": \"{{createdByEmail}}\",\n    \"priority\": \"Payments\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets - Success 3",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid ticket details are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains ticket item', function(){",
+									"    const { ticket } = pm.response.json();",
+									"",
+									"    pm.expect(ticket).to.not.be.null;",
+									"",
+									"    pm.environment.set('ticketId3', ticket.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"question\": \"This is another test ticket\",\n    \"email\": \"{{createdByEmail}}\",\n    \"priority\": \"Payments\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST /tickets/:id/message",
+			"item": [
+				{
+					"name": "/tickets/:id/message - Fail (no text)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no text is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{url}}/tickets/{{ticketId1}}/message",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId1}}",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/:id/message - Fail (invalid ticketId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when an invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"This is a test message for a ticket\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets/{{randomId}}/message",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"{{randomId}}",
+								"message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/:id/message - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid request is made', function(){",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test('Response body contains the message object', function(){",
+									"    const { ticketMessage } = pm.response.json();",
+									"",
+									"    pm.expect(ticketMessage).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"Hi, what is the status on my ticket\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/tickets/{{ticketId1}}/message",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId1}}",
+								"message"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "POST /metrics/articleViews",
+			"item": [
+				{
+					"name": "/metrics/articleViews - Fail (no articleId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no articleId is provided', function(){",
+									"    pm.response.to.have.status(400)",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/metrics/articleViews",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"articleViews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/articleViews - Fail (invalid articleId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid articleId is provided', function(){",
+									"    pm.response.to.have.status(400)",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"articleId\": \"{{randomId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/metrics/articleViews",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"articleViews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/articleViews - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('201 status code when valid articleId is provided', function(){",
+									"    pm.response.to.have.status(201)",
+									"});",
+									"",
+									"pm.test('Response body contains articleView object', function(){",
+									"    const { articleView } = pm.response.json();",
+									"",
+									"    pm.expect(articleView).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"articleId\": \"{{articleId2}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/metrics/articleViews",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"articleViews"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /categories/:id",
+			"item": [
+				{
+					"name": "/categories/:id - Fail (Invalid Id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.be.not.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/{{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{randomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/:id - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid id is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Category is returned in response body', function(){",
+									"    const { category } = pm.response.json();",
+									"",
+									"    pm.expect(category).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/{{categoryId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{categoryId}}"
+							]
+						},
+						"description": "Gets one category by id"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /categories/search?categoryId=[ObjectId]",
+			"item": [
+				{
+					"name": "/categories/search - Fail (no parameters provided)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no id parameters are provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/search",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"search"
+							]
+						},
+						"description": "Gets a collection of articles by 1 or more categories"
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/search - Success (single id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status when a single category id is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Articles are returned in response body', function(){",
+									"    const { articles } = pm.response.json();",
+									"",
+									"    pm.expect(articles).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/search?categoryId={{categoryId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"search"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "{{categoryId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/search - Success (multiple ids)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status when multiple category ids are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Articles are returned in response body', function(){",
+									"    const { articles } = pm.response.json();",
+									"",
+									"    pm.expect(articles).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/search?categoryId={{categoryId3}}&categoryId={{categoryId}}&categoryId={{categoryId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"search"
+							],
+							"query": [
+								{
+									"key": "categoryId",
+									"value": "{{categoryId3}}"
+								},
+								{
+									"key": "categoryId",
+									"value": "{{categoryId}}"
+								},
+								{
+									"key": "categoryId",
+									"value": "{{categoryId2}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /articles/search?authorId=<ObjectId>&tags=[String]",
+			"item": [
+				{
+					"name": "/articles/search - Fail (no parameters)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no query parameters are provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/search",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/search - Success (only tags)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when tags are provided but authorId is not provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Articles returned in response body', function(){",
+									"    const { articles } = pm.response.json();",
+									"",
+									"    pm.expect(articles).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/search?tags=testing",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"search"
+							],
+							"query": [
+								{
+									"key": "tags",
+									"value": "testing"
+								}
+							]
+						},
+						"description": "Gets a collection of articles that match the query parameters"
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/search - Success (only authorId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when authorId is provided but tags are not provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Articles returned in response body', function(){",
+									"    const { articles } = pm.response.json();",
+									"",
+									"    pm.expect(articles).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/search?authorId={{adminId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"search"
+							],
+							"query": [
+								{
+									"key": "authorId",
+									"value": "{{adminId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/search - Success (tags and authorId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when both tags and authorId are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Articles returned in response body', function(){",
+									"    const { articles } = pm.response.json();",
+									"",
+									"    pm.expect(articles).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/search?authorId={{adminId}}&tags=misc&tags=general",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"search"
+							],
+							"query": [
+								{
+									"key": "authorId",
+									"value": "{{adminId}}"
+								},
+								{
+									"key": "tags",
+									"value": "misc"
+								},
+								{
+									"key": "tags",
+									"value": "general"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /articles/:slug",
+			"item": [
+				{
+					"name": "/articles/:slug - Fail (invalid slug)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid slug is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/{{invalidSlug}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{invalidSlug}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:slug - Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const slugs = [",
+									"    pm.environment.get('articleSlug1'),",
+									"    pm.environment.get('articleSlug2'),",
+									"    pm.environment.get('articleSlug3'),",
+									"    pm.environment.get('articleSlug4'),",
+									"    pm.environment.get('articleSlug5'),",
+									"];",
+									"",
+									"let random = Math.floor(Math.random() * 5);",
+									"",
+									"let slugToUse = slugs[random];",
+									"",
+									"pm.environment.set('randomValidSlug', slugToUse);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid slug is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Article is returned in the response body', function(){",
+									"    const { article } = pm.response.json();",
+									"",
+									"    pm.expect(article).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/{{articleSlug1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleSlug1}}"
+							]
+						},
+						"description": "Gets a single article by slug"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /tickets/:ticketId",
+			"item": [
+				{
+					"name": "/tickets/:ticketId - Fail (invalid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when an invalid ticket id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/{{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"{{randomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/:ticketId - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when a valid ticket id is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains ticket item', function(){",
+									"    const { ticket } = pm.response.json();",
+									"",
+									"    pm.expect(ticket).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/{{ticketId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId2}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /tickets/byUser/:email",
+			"item": [
+				{
+					"name": "GET /tickets/byUser/:email - Fail (invalid email)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid email is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/byUser/invalid@email.com",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"byUser",
+								"invalid@email.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET /tickets/byUser/:email - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid email is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains tickets', function(){",
+									"    const { tickets } = pm.response.json();",
+									"",
+									"    pm.expect(tickets).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/byUser/{{createdByEmail}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"byUser",
+								"{{createdByEmail}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /tickets/byAssignee/:userId",
+			"item": [
+				{
+					"name": "/tickets/byAssignee/:userId - Fail (invalid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code with valid id but user is not an admin', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/byAssignee/{{regId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"byAssignee",
+								"{{regId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/byAssignee/:userId - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code with valid admin id', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response contains list of tickets', function(){",
+									"    const { tickets } = pm.response.json();",
+									"",
+									"    pm.expect(tickets).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/byAssignee/{{adminId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"byAssignee",
+								"{{adminId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GET /metrics/*",
+			"item": [
+				{
+					"name": "/metrics/comments/lastDay",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/comments/lastDay",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"comments",
+								"lastDay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/comments/lastMonth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/comments/lastMonth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"comments",
+								"lastMonth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/comments/lastWeek",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/comments/lastWeek",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"comments",
+								"lastWeek"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/comments/customRange",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/comments/customRange?startDate=2021-01-01&endDate=2021-01-31",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"comments",
+								"customRange"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2021-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2021-01-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/articleViews/lastDay",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/articleViews/lastDay",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"articleViews",
+								"lastDay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/articleViews/lastWeek",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/articleViews/lastWeek",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"articleViews",
+								"lastWeek"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/articleViews/lastMonth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/articleViews/lastMonth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"articleViews",
+								"lastMonth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/articleViews/customRange",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/articleViews/customRange?startDate=2021-01-01&endDate=2021-01-31",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"articleViews",
+								"customRange"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2021-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2021-01-31"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/tickets/lastDay",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/tickets/lastDay",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"tickets",
+								"lastDay"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/tickets/lastWeek",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/tickets/lastWeek",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"tickets",
+								"lastWeek"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/tickets/lastMonth",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/tickets/lastMonth",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"tickets",
+								"lastMonth"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/metrics/tickets/customRange",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/metrics/tickets/customRange?startDate=2021-01-01&endDate=2021-04-09",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"metrics",
+								"tickets",
+								"customRange"
+							],
+							"query": [
+								{
+									"key": "startDate",
+									"value": "2021-01-01"
+								},
+								{
+									"key": "endDate",
+									"value": "2021-04-09"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PATCH /tickets/assignUser",
+			"item": [
+				{
+					"name": "/tickets/assignUser - Fail (no ticketId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no ticketId is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/assignUser?userId={{adminId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"assignUser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{adminId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/assignUser - Fail (no userId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no userId is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/assignUser?ticketId={{ticketId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"assignUser"
+							],
+							"query": [
+								{
+									"key": "ticketId",
+									"value": "{{ticketId1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/assignUser - Fail (invalid ticketId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when an invalid ticketId is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/assignUser?userId={{adminId}}&ticketId={{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"assignUser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{adminId}}"
+								},
+								{
+									"key": "ticketId",
+									"value": "{{randomId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/assignUser - Fail (userId does not exist)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when a userId that does not exist is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/assignUser?userId={{randomId}}&ticketId={{ticketId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"assignUser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{randomId}}"
+								},
+								{
+									"key": "ticketId",
+									"value": "{{ticketId1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/assignUser - Fail (userId is not admin)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when userId that is provided does not have admin permissions', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/assignUser?userId={{regId}}&ticketId={{ticketId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"assignUser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{regId}}"
+								},
+								{
+									"key": "ticketId",
+									"value": "{{ticketId1}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/assignUser - Fail (invalid ticketId & userId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when both userId and ticketId are provided, but invalid', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message array', function(){",
+									"    const { messages } = pm.response.json();",
+									"",
+									"    pm.expect(messages).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/assignUser?userId={{randomId}}&ticketId={{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"assignUser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{randomId}}"
+								},
+								{
+									"key": "ticketId",
+									"value": "{{randomId}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/assignUser - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid userId and ticketId are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/assignUser?userId={{adminId}}&ticketId={{ticketId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"assignUser"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{adminId}}"
+								},
+								{
+									"key": "ticketId",
+									"value": "{{ticketId2}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PATCH /tickets/updateStatus/:ticketId",
+			"item": [
+				{
+					"name": "/tickets/updateStatus - Fail (no status)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no status is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/updateStatus/{{ticketId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"updateStatus",
+								"{{ticketId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/updateStatus - Fail (invalid ticketId)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when an invalid ticketId is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/tickets/updateStatus/{{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"updateStatus",
+								"{{randomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/updateStatus - Fail (invalid status)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when an invalid status is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": 20\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/tickets/updateStatus/{{ticketId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"updateStatus",
+								"{{ticketId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/updateStatus - Success",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"status\": 3\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/tickets/updateStatus/{{ticketId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"updateStatus",
+								"{{ticketId1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PATCH /categories/:id",
+			"item": [
+				{
+					"name": "/categories/:id - Fail (no name)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no name is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"description\": \"This is a test category that has been updated\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories/{{categoryId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{categoryId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/:id - Fail (no description)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no description is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Test Category\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories/{{categoryId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{categoryId1}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/:id - Fail (invalid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Test Category\",\n    \"description\": \"This is a test category that has been updated\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories/{{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{randomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/:id - Success",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"pm.environment.unset('createCategoryName');",
+									"let categoryName = `Updated test category ${Date.now()}`;",
+									"pm.environment.set('createCategoryName', categoryName);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 update category successfully', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Updated category is returned in response body', function(){",
+									"    const { updatedCategory } = pm.response.json();",
+									"",
+									"    pm.expect(updatedCategory).to.not.be.null;",
+									"",
+									"    pm.environment.set('categoryName1', updatedCategory.name);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{createCategoryName}}\",\n    \"description\": \"This is a test category that has been updated\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/categories/{{categoryId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{categoryId}}"
+							]
+						},
+						"description": "Updates a single category"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PATCH /articles/:id",
+			"item": [
+				{
+					"name": "/articles/:id - Fail (no title)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no title is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes. It has been updated since its creation</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes. It has been updated since its creation\",\n    \"tags\": [\"misc\", \"random\", \"dumb\"],\n    \"category\": \"6064b91cb95ba93f6897113b\",\n    \"isFree\": true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:id - Fail (no htmlBody)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no htmlBody is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated test Article\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes. It has been updated since its creation\",\n    \"tags\": [\"misc\", \"random\", \"dumb\"],\n    \"category\": \"6064b91cb95ba93f6897113b\",\n    \"isFree\": true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:id - Fail (no textBody)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no textBody is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes. It has been updated since its creation</p>\",\n    \"tags\": [\"misc\", \"random\", \"dumb\"],\n    \"category\": \"6064b91cb95ba93f6897113b\",\n    \"isFree\": true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:id - Fail (no category)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no category is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes. It has been updated since its creation</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes. It has been updated since its creation\",\n    \"tags\": [\"misc\", \"random\"],\n    \"isFree\": true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:id - Fail (no isFree)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no isFree is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes. It has been updated since its creation</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes. It has been updated since its creation\",\n    \"tags\": [\"misc\", \"random\", \"dumb\"],\n    \"category\": \"6064b91cb95ba93f6897113b\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId2}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:id - Success (same category)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const categories = [",
+									"    pm.environment.get('categoryId1'),",
+									"    pm.environment.get('categoryId2'),",
+									"    pm.environment.get('categoryId3'),",
+									"];",
+									"",
+									"let random = Math.floor(Math.random() * 3);",
+									"",
+									"let categoryToUse = categories[random];",
+									"",
+									"pm.environment.set('updateArticleCategory', categoryToUse)"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"This is a Test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes. It has been updated since its creation</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes. It has been updated since its creation\",\n    \"tags\": [\"misc\", \"random\", \"dumb\"],\n    \"category\": \"{{categoryId2}}\",\n    \"isFree\": true\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId2}}"
+							]
+						},
+						"description": "Updates a single article"
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:id - Success (different category)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid update is requested', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Status object in response body', function(){",
+									"    return 'status' in pm.response.json();",
+									"});",
+									"",
+									"pm.test('Updated article object in response body', function(){",
+									"    return 'updatedArticle' in pm.response.json();",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Updated test Article\",\n    \"htmlBody\": \"<p>This is yet another article that we have written for testing purposes. It has been updated since its creation</p>\",\n    \"textBody\": \"This is yet another article that we have written for testing purposes. It has been updated since its creation\",\n    \"tags\": [\"misc\", \"random\", \"dumb\"],\n    \"category\": \"{{categoryId2}}\",\n    \"isFree\": false\n}"
+						},
+						"url": {
+							"raw": "{{url}}/articles/{{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId2}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE /articles/:id",
+			"item": [
+				{
+					"name": "/articles/:id - Fail (no parameters)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/{{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{randomId}}"
+							]
+						},
+						"description": "Deletes a single article"
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/:id - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid id is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/{{articleId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"{{articleId1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE /articles/multiple?id=[ObjectId]",
+			"item": [
+				{
+					"name": "/articles/multiple - Fail (no parameters)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no query parameter is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/multiple",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"multiple"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/multiple - Fail (invalid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/multiple?id={{randomId}}&id={{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"multiple"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{randomId}}"
+								},
+								{
+									"key": "id",
+									"value": "{{articleId2}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/articles/multiple - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid ids are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/articles/multiple?id={{articleId3}}&id={{articleId2}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"articles",
+								"multiple"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{articleId3}}"
+								},
+								{
+									"key": "id",
+									"value": "{{articleId2}}"
+								}
+							]
+						},
+						"description": "Deletes multiple articles"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE /categories/:id",
+			"item": [
+				{
+					"name": "/categories/:id - Fail (invalid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/{{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{randomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/:id - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid id is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/{{categoryId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"{{categoryId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE /categories/multiple?id=[ObjectId]",
+			"item": [
+				{
+					"name": "/categories/multiple - Fail (no parameters)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no query parameters are provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/multiple",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"multiple"
+							]
+						},
+						"description": "Deletes multiple categories"
+					},
+					"response": []
+				},
+				{
+					"name": "/categories/multiple - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when query parameters are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/categories/multiple?id={{categoryId2}}&id={{categoryId3}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"categories",
+								"multiple"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{categoryId2}}"
+								},
+								{
+									"key": "id",
+									"value": "{{categoryId3}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE /tickets/:id",
+			"item": [
+				{
+					"name": "/tickets/:id - Fail (invalid id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when invalid id is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Repsonse body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/{{randomId}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"{{randomId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/:id - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when a valid ticketId is provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body should contain a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"}); "
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/{{ticketId1}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"{{ticketId1}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "DELETE /tickets/multiple?id=[ObjectId]",
+			"item": [
+				{
+					"name": "/tickets/multiple - Fail (no id)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when no id parameter is provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/multiple",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"multiple"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/multiple - Fail (one or more invalid ids)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('400 status code when one or more invalid id parameters are provided', function(){",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test('Response body contains a message and list of incomplete ids', function(){",
+									"    const { message, incomplete } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"    pm.expect(incomplete).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/multiple?id={{randomId}}&id={{ticketId2}}&id={{ticketId3}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"multiple"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{randomId}}"
+								},
+								{
+									"key": "id",
+									"value": "{{ticketId2}}"
+								},
+								{
+									"key": "id",
+									"value": "{{ticketId3}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "/tickets/multiple - Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test('200 status code when valid id parameters are provided', function(){",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test('Response body contains a message', function(){",
+									"    const { message } = pm.response.json();",
+									"",
+									"    pm.expect(message).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/tickets/multiple?id={{ticketId2}}&id={{ticketId3}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"tickets",
+								"multiple"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "{{ticketId2}}"
+								},
+								{
+									"key": "id",
+									"value": "{{ticketId3}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/tickets/unassigned",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('200 status code when unassigned tickets are found', function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response body contains tickets', function(){",
+							"    const { tickets } = pm.response.json();",
+							"",
+							"    pm.expect(tickets).to.not.be.null;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/tickets/unassigned",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tickets",
+						"unassigned"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "/tickets/incomplete",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('200 status code when incomplete tickets are found', function(){",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Response body contains tickets', function(){",
+							"    const { tickets } = pm.response.json();",
+							"",
+							"    pm.expect(tickets).to.not.be.null;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{url}}/tickets/incomplete",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"tickets",
+						"incomplete"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

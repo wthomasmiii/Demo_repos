@@ -1,0 +1,139 @@
+{
+	"id": "e1a6895c-1c0d-488e-a8a6-f978b7415948",
+	"name": "TruckingSoftwarePublicApi",
+	"values": [
+		{
+			"key": "url",
+			"value": "http://localhost:3001/api/v1",
+			"enabled": true
+		},
+		{
+			"key": "categoryName",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "categoryId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "articleSlug1",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "articleId1",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "createCategoryName",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "createArticleCategory",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "invalidSlug",
+			"value": "this-is-an-invalid-slug-23",
+			"enabled": true
+		},
+		{
+			"key": "validAuthorId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "updateArticleCategory",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "ticketId1",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "ticketId2",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "randomId",
+			"value": "6055309c1678a79783d16e6e",
+			"enabled": true
+		},
+		{
+			"key": "createdByEmail",
+			"value": "xyz@email.com",
+			"enabled": true
+		},
+		{
+			"key": "categoryId2",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "categoryId3",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "articleId2",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "articleId3",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "adminId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "regId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "ticketId3",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "categoryId1",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "categoryName1",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "randomValidSlug",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "articleId",
+			"value": "",
+			"enabled": true
+		},
+		{
+			"key": "articleSlug",
+			"value": "",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2021-04-13T17:03:32.842Z",
+	"_postman_exported_using": "Postman/7.36.5"
+}
